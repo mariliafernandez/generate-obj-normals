@@ -8,15 +8,11 @@ def calculate_normals(filepath):
     r = obj.read()
 
   position_data = read_position(r)
-  # print(position_data)
-
   faces_data = read_faces(r)
-  # print(faces_data)
-
   obj_n = obj_normals(position_data, faces_data)
-  # print(obj_n)
+  name = (filepath.name).split('.')[0]
 
-  write_obj(r, obj_n)
+  write_obj(name, position_data, faces_data, obj_n)
 
 def read_position(r):
   position = list()
@@ -72,16 +68,28 @@ def normal(p1,p2,p3):
 
   return n
 
-def write_obj(r, normals):
+def write_obj(filename, positions, faces, normals):
+  v_line = ''
   vn_line = ''
+  f_line = ''
+
+  for p in positions:
+    v_line = f'{v_line}\nv {p[0]} {p[1]} {p[2]}'
 
   for n in normals:
     vn_line = f'{vn_line}\nvn {n[0]} {n[1]} {n[2]}'
+
+  i=0
+  for f in faces:
+    i+=1
+    f_line = f'{f_line}\nf {f[0]+1}//{i} {f[1]+1}//{i} {f[2]+1}//{i}'
   
-  out = f'{r}\n{vn_line}'
+  out = f'{v_line}\n{vn_line}\n{f_line}'
   
-  with open('out.obj', 'w') as f:
+  with open(f'{filename}_out.obj', 'w') as f:
     f.write(out)
+
+
 
 
 if __name__ == '__main__':
