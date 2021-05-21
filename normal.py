@@ -10,9 +10,9 @@ def calculate_normals(filepath):
   position_data = read_position(r)
   faces_data = read_faces(r)
   obj_n = obj_normals(position_data, faces_data)
-  name = (filepath.name).split('.')[0]
+  filename = (filepath.name).split('.')[0]
 
-  write_obj(name, position_data, faces_data, obj_n)
+  write_obj(filename, position_data, faces_data, obj_n)
 
 def read_position(r):
   position = list()
@@ -84,7 +84,7 @@ def write_obj(filename, positions, faces, normals):
     i+=1
     f_line = f'{f_line}\nf {f[0]+1}//{i} {f[1]+1}//{i} {f[2]+1}//{i}'
   
-  out = f'{v_line}\n{vn_line}\n{f_line}'
+  out = f'# {filename}_out.obj\n{v_line}\n{vn_line}\n{f_line}'
   
   with open(f'{filename}_out.obj', 'w') as f:
     f.write(out)
@@ -94,10 +94,10 @@ def write_obj(filename, positions, faces, normals):
 
 if __name__ == '__main__':
   parser = argparse.ArgumentParser()
-  parser.add_argument('obj')
+  parser.add_argument('filepath')
 
   args = parser.parse_args()
 
-  obj = Path(args.obj)
+  obj = Path(args.filepath)
 
   calculate_normals(obj)
